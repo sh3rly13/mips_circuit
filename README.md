@@ -1,12 +1,12 @@
-# Mips Circuit
+# Mips Circuit Turkish Translate
 
-**This is a demo implementation of ZKMIPS for Community Education purposes, which serves as Phase 1 of the ZKM Early Contributor Program(ECP).**
+**Bu, ZKM Erken Katılımcı Programının (ECP) 1. Aşaması olarak hizmet veren, Toplum Eğitimi amaçlı ZKMIPS'in demo uygulamasıdır.**
 
-The demo implementation uses the Cannon simulator, Zokrates DSL, and Groth16. It supports the full execution of Minigeth, outputs the entire instruction sequence, generates proofs for each instruction, and submits them to an on-chain contract for verification.
+Demo uygulaması Cannon simülatörünü, Zokrates DSL'yi ve Groth16'yı kullanıyor. Minigeth'in tam olarak yürütülmesini destekler, tüm talimat dizisinin çıktısını alır, her talimat için kanıtlar üretir ve bunları doğrulama için zincir üstü bir sözleşmeye gönderir.
 
-## Prerequisites
+## Önkoşullar
 
-- Hardware: MEM >= 8G
+- Donanım : MEM >= 8G
 
 - Install [Rust (>=1.72.1)](https://www.rust-lang.org/tools/install)
 
@@ -14,7 +14,7 @@ The demo implementation uses the Cannon simulator, Zokrates DSL, and Groth16. It
 
 - Install Make
 
-- Install [Zokrates](https://zokrates.github.io/gettingstarted.html). One-line installation is recommended or adjust the settings accordingly if installing from the source.
+- Install [Zokrates](https://zokrates.github.io/gettingstarted.html). Tek satırlı kurulum önerilir veya kaynaktan kurulum yapılıyorsa ayarları buna göre yapın.
   Set `$ZOKRATES_STDLIB` and `$PATH`:
 
   ```sh
@@ -22,10 +22,10 @@ The demo implementation uses the Cannon simulator, Zokrates DSL, and Groth16. It
   export PATH=<path-to>/.zokrates/bin:$PATH
   ```
 
-  This will be used to compile the MIPS VM circuit.
+  Bu, MIPS VM devresini derlemek için kullanılacaktır.
 
 - Install [postgres](https://www.postgresql.org/download/)
-  - You can follow [this](https://www.youtube.com/watch?v=RdPYA-wDhTA) video guide to install using Docker, or alternatively follow [these instructions](https://www.docker.com/blog/how-to-use-the-postgres-docker-official-image)
+  - Takip edebilirsin [this](https://www.youtube.com/watch?v=RdPYA-wDhTA) Docker'ı kullanarak yüklemek için video kılavuzu veya alternatif olarak izleyin [these instructions](https://www.docker.com/blog/how-to-use-the-postgres-docker-official-image)
   - **NOTE: you cannot use a default empty password**, set the password to `postgres` for simplicity for the rest of the guide
   - (Optional) Install [DBeaver](https://dbeaver.io/download/) or [pgadmin](https://www.pgadmin.org/download/): Using a Database Viewer make debugging and editing data much easier. For a non-UI version you can use [psql](https://www.timescale.com/blog/how-to-install-psql-on-mac-ubuntu-debian-windows/).
 
