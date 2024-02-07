@@ -8,13 +8,13 @@ Demo uygulaması Cannon simülatörünü, Zokrates DSL'yi ve Groth16'yı kullan�
 
 - Donanım : MEM >= 8G
 
-- Install [Rust (>=1.72.1)](https://www.rust-lang.org/tools/install)
+- İndir [Rust (>=1.72.1)](https://www.rust-lang.org/tools/install)
 
-- Install [Go (>=1.21)](https://go.dev/doc/install)
+- İndir [Go (>=1.21)](https://go.dev/doc/install)
 
-- Install Make
+- İndir Make
 
-- Install [Zokrates](https://zokrates.github.io/gettingstarted.html). Tek satırlı kurulum önerilir veya kaynaktan kurulum yapılıyorsa ayarları buna göre yapın.
+- İndir [Zokrates](https://zokrates.github.io/gettingstarted.html). Tek satırlı kurulum önerilir veya kaynaktan kurulum yapılıyorsa ayarları buna göre yapın.
   Set `$ZOKRATES_STDLIB` and `$PATH`:
 
   ```sh
@@ -24,18 +24,18 @@ Demo uygulaması Cannon simülatörünü, Zokrates DSL'yi ve Groth16'yı kullan�
 
   Bu, MIPS VM devresini derlemek için kullanılacaktır.
 
-- Install [postgres](https://www.postgresql.org/download/)
+- İndir [postgres](https://www.postgresql.org/download/)
   - Takip edebilirsin [this](https://www.youtube.com/watch?v=RdPYA-wDhTA) Docker'ı kullanarak yüklemek için video kılavuzu veya alternatif olarak izleyin [these instructions](https://www.docker.com/blog/how-to-use-the-postgres-docker-official-image)
-  - **NOTE: you cannot use a default empty password**, set the password to `postgres` for simplicity for the rest of the guide
-  - (Optional) Install [DBeaver](https://dbeaver.io/download/) or [pgadmin](https://www.pgadmin.org/download/): Using a Database Viewer make debugging and editing data much easier. For a non-UI version you can use [psql](https://www.timescale.com/blog/how-to-install-psql-on-mac-ubuntu-debian-windows/).
+  - **NOT: Varsayılan boş şifreyi kullanamazsınız**, Kılavuzun geri kalanında basitlik sağlamak amacıyla şifreyi 'postgres' olarak ayarlayın
+  - (İsteğe bağlı) İndir [DBeaver](https://dbeaver.io/download/) Ya da [pgadmin](https://www.pgadmin.org/download/): Veritabanı Görüntüleyiciyi kullanmak, verilerde hata ayıklamayı ve düzenlemeyi çok daha kolay hale getirir. Kullanıcı arayüzü olmayan bir sürüm için kullanabilirsiniz [psql](https://www.timescale.com/blog/how-to-install-psql-on-mac-ubuntu-debian-windows/).
 
-## Postgres Setup
+## Postgres Kurmak
 
-From the DBeaver (or pgadmin) interface, right click on the postgres database and navigate to `SQL Editor > New SQL Script`
+DBeaver (veya pgadmin) arayüzünden postgres veritabanına sağ tıklayın ve 'SQL Editör > Yeni SQL Komut Dosyası'na gidin
 
 ![SQLEditor](/images/SQLEditor.png)
 
-In the Script page, paste this code:
+Komut Dosyası sayfasına şu kodu yapıştırın:
 
 ```sql
   DROP TABLE IF EXISTS f_traces;
@@ -104,13 +104,13 @@ In the Script page, paste this code:
   );
 ```
 
-Click the Execute SQL Script button:
+SQL Komut Dosyasını Yürüt düğmesini tıklayın:
 
 ![ExecuteSQL](/images/ExecuteSQL.png)
 
-**Note**: The id of first execution trace to be verified or proved is 1
+**Not**: Doğrulanacak veya kanıtlanacak ilk yürütme izinin kimliği 1'dir
 
-**Note**: you can specify your own <first_execution_trace_id> by following commands:
+**Not**: Aşağıdaki komutları kullanarak kendi <first_execution_trace_id> kimliğinizi belirleyebilirsiniz:
 
 ```sql
   INSERT INTO t_witness_block_number(f_block) VALUES(${<first_execution_trace_id>});
@@ -118,21 +118,21 @@ Click the Execute SQL Script button:
   INSERT INTO t_proof_block_number(f_block) VALUES(${$(<first_execution_trace_id>});
 ```
 
-## Program Execution Records
+## Program Yürütme Kayıtları
 
-Clone [cannon-mips](https://github.com/zkMIPS/cannon-mips/) into another folder and follow its instructions to generate the program execution records. Notes:
+Klon [cannon-mips](https://github.com/zkMIPS/cannon-mips/) başka bir klasöre kopyalayın ve program yürütme kayıtlarını oluşturmak için talimatlarını izleyin. Notlar:
 
-- Please use your own Alchemy/Infura account
-- For the POSTGRES configuration, you can use: `export POSTGRES_CONFIG="sslmode=disable user=postgres password=postgres host=172.17.0.2 port=5432 dbname=postgres"`. Note that the host points to a bridged Docker host.
-- If you have issues with your db login you can try resetting the password: `docker exec -it postgres psql -U postgres -c "ALTER USER postgres WITH PASSWORD 'postgres';"`
+- Lütfen kendi Alchemy/Infura hesabınızı kullanın
+- POSTGRES yapılandırması için şunu kullanabilirsiniz: `export POSTGRES_CONFIG="sslmode=disable user=postgres şifresi=postgres host=172.17.0.2 port=5432 dbname=postgres"`. Ana bilgisayarın köprülü bir Docker ana bilgisayarına işaret ettiğini unutmayın.
+- Veritabanı giriş bilgilerinizle ilgili sorun yaşıyorsanız şifreyi sıfırlamayı deneyebilirsiniz: `docker exec -it postgres psql -U postgres -c "ALTER USER postgres with PASSWORD 'postgres';"'
 
-We should see a record in the database in the `f_traces` table (refresh the table if you don't see it)
+Veritabanındaki `f_traces` tablosunda bir kayıt görmeliyiz (görmüyorsanız tabloyu yenileyin)
 
 ![f_traces](/images/f_traces.png)
 
-**Note**: There should be 1 record that starts with id of 1. If the id of that record is not 1, change it to 1.
+**Not**: ID'si 1 ile başlayan 1 kayıt olmalıdır. Eğer o kaydın ID'si 1 değilse 1 olarak değiştirin.
 
-Now that we have the trace, we want to go back, Clone [mips_circuit](https://github.com/zkMIPS/mips_circuit/) and compile the MIPS VM circuit using Zokrates
+Artık izini aldığımıza göre geri dönüp [mips_circuit](https://github.com/zkMIPS/mips_circuit/) klonlamak ve Zokrates kullanarak MIPS VM devresini derlemek istiyoruz.
 
 ```sh
 cd ../..
@@ -144,17 +144,17 @@ wget http://ec2-46-51-227-198.ap-northeast-1.compute.amazonaws.com/proving.key -
 popd
 ```
 
-## Verification though a Smart Contract Verifier
+## Akıllı Sözleşme Doğrulayıcı Aracılığıyla Doğrulama
 
-We have deployed a goerli verify contract at: [0xacd47ec395668320770e7183b9ee817f4ff8774e](https://goerli.etherscan.io/address/0xacd47ec395668320770e7183b9ee817f4ff8774e). You can use this to verify the proof.
+Şu adreste bir goerli doğrulama sözleşmesi dağıttık: [0xacd47ec395668320770e7183b9ee817f4ff8774e](https://goerli.etherscan.io/address/0xacd47ec395668320770e7183b9ee817f4ff8774e). Kanıtı doğrulamak için bunu kullanabilirsiniz.
 
-The next steps will be focused on verifying the proof on-chain
+Sonraki adımlar zincirdeki kanıtın doğrulanmasına odaklanacak
 
-### Witness Generator
+### Tanık Oluşturucu
 
-We need to edit the environment variables, replacing the variables with your database, the RPC from goerli, and the private key for your verifier account, note that the verifier account needs some Goerli ETH to post the witness string
+Değişkenleri veritabanınızla, goerli'den RPC'yle ve doğrulayıcı hesabınızın özel anahtarıyla değiştirerek ortam değişkenlerini düzenlememiz gerekiyor; doğrulayıcı hesabının tanık dizesini göndermek için bir miktar Goerli ETH'ye ihtiyacı olduğunu unutmayın.
 
-Edit the `setenv.bash` file:
+`setenv.bash` dosyasını düzenleyin:
 
 ```sh
 export DATABASE_URL=postgresql://postgres:postgres@localhost:5432/postgres
@@ -181,13 +181,13 @@ export CHAIN_ETH_NETWORK=goerli
 export CIRCUIT_PROVING_KEY_PATH=${PWD}/core/lib/circuit/proving.key # generated by: zokrates compile -i mips_vm_poseidon.zok
 ```
 
-Source the file into your local shell
+Dosyayı yerel kabuğunuza kaynaklayın (Source the file into your local shell)
 
 ```sh
 source ./setenv.bash
 ```
 
-Compile the witness generator
+Tanık oluşturucuyu derleyin
 
 ```sh
 pushd core/bin/server
@@ -195,13 +195,13 @@ cargo build --release # may need several minutes
 popd
 ```
 
-Run the witness generator
+Tanık oluşturucuyu çalıştırın
 
 ```sh
 nohup ./target/release/server > server.output 2>&1 &
 ```
 
-In the `server.output` file, you should be able to see
+`server.output` dosyasında görebilmeniz gerekir
 
 ```
 Witness:
@@ -210,17 +210,17 @@ true
 witness_str:A_LONG_STRING
 ```
 
-## Prover
+## Kanıtlayıcı
 
-Now that the proof is on-chain, we can verify the proof using a Prover
+Artık kanıt zincirde olduğuna göre kanıtı bir Prover kullanarak doğrulayabiliriz
 
-We need to set the environment variables
+Ortam değişkenlerini ayarlamamız gerekiyor
 
 ```sh
 source ./setenv.bash
 ```
 
-Compile the Prover
+Prover'ı(Kanıtlayıcıyı) derleyin
 
 ```sh
 pushd core/bin/prover
@@ -228,12 +228,14 @@ cargo build --release  # may need several minutes
 popd
 ```
 
-And run the Prover
+Ve Prover'ı çalıştırın
 
 ```sh
 nohup ./target/release/prover > prover.output 2>&1 &
 ```
 
-In a few seconds, you should be able to see your transaction [here](https://goerli.etherscan.io/address/0xacd47ec395668320770e7183b9ee817f4ff8774e).
+Birkaç saniye içinde işleminizi görebilmelisiniz [here](https://goerli.etherscan.io/address/0xacd47ec395668320770e7183b9ee817f4ff8774e).
 
-Congratulations! You have completed the process of posting and verifying a ZK proof with the MIPS circuit.
+Tebrikler! MIPS devresiyle ZK kanıtını gönderme ve doğrulama işlemini tamamladınız.
+
+
